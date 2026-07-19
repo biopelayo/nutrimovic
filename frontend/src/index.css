@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-surface text-ink font-sans antialiased;
+    font-size: 15px;
+  }
+  h1,
+  h2 {
+    @apply font-sans font-semibold;
+  }
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  ::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-ink-muted/40;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-card border border-line bg-paper shadow-card;
+  }
+  .field {
+    @apply w-full rounded-none border border-line bg-paper px-2 py-1.5 text-ink outline-none transition
+      placeholder:text-ink-muted focus:border-brand focus:ring-1 focus:ring-brand;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-brand-dark bg-brand px-3 py-1.5
+      font-medium text-white transition hover:bg-brand-dark focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-line bg-paper px-3 py-1.5
+      text-ink transition hover:bg-excelhead focus:outline-none;
+  }
+  .thumb {
+    @apply grid shrink-0 place-items-center overflow-hidden rounded-sm bg-white shadow-thumb;
+  }
+  .thumb img {
+    @apply h-full w-full object-cover;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-[11px] font-medium;
+  }
+
+  /* ----- Cuadrícula tipo Excel ----- */
+  .sheet {
+    @apply w-full text-[14.5px];
+    border-collapse: collapse;
+  }
+  .sheet th,
+  .sheet td {
+    @apply border border-line px-2.5 py-1.5;
+  }
+  .sheet thead th {
+    @apply sticky top-0 z-10 bg-excelhead text-left text-[13px] font-semibold text-ink-soft;
+  }
+  /* Fila de letras de columna A, B, C… */
+  .sheet .colletter th {
+    @apply bg-excelhead text-center text-[12px] font-normal text-ink-muted;
+    position: static;
+    top: auto;
+    height: 22px;
+  }
+  /* Número de fila (columna gris de la izquierda) */
+  .rownum {
+    @apply bg-excelhead text-center text-[12px] font-normal text-ink-muted;
+    width: 38px;
+  }
+  .cell-num {
+    @apply text-right text-[15.5px] font-medium;
+    font-variant-numeric: tabular-nums;
+  }
+  .col-sticky {
+    @apply bg-paper;
+  }
+  .sheet thead .col-sticky {
+    @apply bg-excelhead;
+  }
+  .sheet tbody tr:hover td {
+    @apply bg-excelsel/60;
+  }
+  .sheet tbody tr:hover .col-sticky {
+    @apply bg-excelsel/60;
+  }
+  .sheet tfoot td {
+    @apply bg-excelhead font-semibold text-ink;
+  }
+  .grams-input {
+    @apply w-[80px] rounded-none border border-line bg-white px-2 py-1.5 text-right text-[16px] font-semibold tabular-nums text-ink
+      outline-none focus:border-brand focus:ring-1 focus:ring-brand;
+  }
+  /* Pestañas de hoja al estilo Excel (parte inferior) */
+  .sheet-tab {
+    @apply border-r border-line px-4 py-1.5 text-[13px] text-ink-soft transition;
+  }
+  .sheet-tab-active {
+    @apply -mt-px border-t-2 border-t-brand bg-paper font-semibold text-brand-dark;
+  }
+  .sheet-tab-inactive {
+    @apply bg-excelhead hover:bg-white;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  .card {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}
