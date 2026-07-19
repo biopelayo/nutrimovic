@@ -70,3 +70,49 @@ export function gramsPerExchange(food: Food): number | null {
   if (per100 === null || per100 === 0) return null;
   return Math.round(((RATION_G * 100) / per100) * 10) / 10;
 }
+
+export interface Substitute {
+  food: Food;
+  grams: number;
+}
+
+/**
+ * Sustituciones por intercambio con criterio dietético (SEEN/SED, Moreiras):
+ * SOLO alimentos del MISMO grupo de alimento (leche por otros lácteos, fruta por
+ * otra fruta), que aporten la misma cantidad del macronutriente de referencia del
+ * grupo. Se descartan equivalencias desproporcionadas (gramaje fuera de 0,25×–4×
+ * del original), que no tienen sentido práctico (p. ej. 1,9 kg de queso por un vaso
+ * de leche). Se ordenan por cercanía al gramaje original.
+ */
+export function substitutesFor(food: Food, grams: number, all: Food[], limit = 5): Substitute[] {
+  const ref = referenceNutrient(food.group);
+  if (!ref) return [];
+  const per100 = usableAmount(food, ref);
+  if (per100 === null || per100 === 0) return [];
+  const edible = food.edible_portion_factor ?? 1;
+  const refGrams = per100 * ((grams * edible) / 100); // g del macro de referencia
+  if (refGrams <= 0) return [];
+
+  const subs: Substitute[] = [];
+  for (const c of all) {
+    if (c.id === food.id) continue;
+    if (c.group !== food.group) continue; // mismo grupo de alimento
+    if (c.subgroup && food.subgroup && c.subgroup !== food.subgroup) {
+      // preferimos el mismo subgrupo; si no hay, se relaja abajo
+    }
+    const cp = usableAmount(c, ref);
+    if (cp === null || cp === 0) continue;
+    const cEdible = c.edible_portion_factor ?? 1;
+    const g = refGrams / ((cp * cEdible) / 100);
+    if (g < grams * 0.25 || g > grams * 4) continue; // descarta gramajes absurdos
+    subs.push({ food: c, grams: Math.round(g * 10) / 10 });
+  }
+  // Primero mismo subgrupo, luego por cercanía de gramaje.
+  subs.sort((a, b) => {
+    const sa = a.food.subgroup === food.subgroup ? 0 : 1;
+    const sb = b.food.subgroup === food.subgroup ? 0 : 1;
+    if (sa !== sb) return sa - sb;
+    return Math.abs(a.grams - grams) - Math.abs(b.grams - grams);
+  });
+  return subs.slice(0, limit);
+}
