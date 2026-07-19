@@ -1,12 +1,13 @@
 import { useInstallPrompt } from '../hooks/useInstallPrompt';
+import { LeafLogo } from './Icons';
 
-// Barra superior al estilo Excel: franja verde con el nombre del libro.
+// Barra superior: franja verde con el logo de hoja y el nombre.
 export function Header() {
   const { canInstall, promptInstall } = useInstallPrompt();
   return (
-    <header className="no-print flex items-center gap-3 bg-brand px-4 py-1.5 text-white">
+    <header className="no-print flex items-center gap-2 bg-brand px-4 py-1.5 text-white">
+      <LeafLogo className="h-5 w-5 text-white/90" />
       <h1 className="text-[15px] font-semibold tracking-tight">NutriMovic</h1>
-      <span className="text-[12px] text-white/70">— libro de dieta</span>
       <div className="ml-auto">
         {canInstall && (
           <button
