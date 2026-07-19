@@ -22,3 +22,5 @@ dist/
 data/translate/
 
 .github/workflows/
+
+frontend/shoot.mjs
