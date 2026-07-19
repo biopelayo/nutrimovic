@@ -101,8 +101,8 @@ export function DietSheet({ foods, gramsById, onGramsChange, columns, onColumnsC
         <div>
           <h2 className="text-lg font-bold text-ink">Hoja de dieta</h2>
           <p className="text-[13px] text-ink-soft">
-            <span className="font-semibold text-ink">{formatNumber(foods.length)}</span> alimentos · busca y pon gramos a
-            los que uses ·{' '}
+            <span className="font-semibold text-ink">{formatNumber(foods.length)}</span> alimentos · pon gramos o
+            intercambios (se recalculan entre sí) ·{' '}
             <span className="font-semibold text-ink">{active.length}</span> en uso ·{' '}
             <span className="font-semibold text-ink">{formatNumber(totalKcal)}</span> kcal
           </p>
@@ -317,13 +317,34 @@ function GroupRows({
             </td>
             {(() => {
               const m = exchangesByMacro(f, grams);
-              const ex = (x: number | null) =>
-                x === null ? <span className="text-ink-muted">·</span> : formatNumber(x);
+              // Editar un intercambio calcula el gramaje que lo produce (función inversa).
+              const setEx = (macroId: string, val: string) => {
+                const nv = f.nutrients[macroId];
+                if (!nv || nv.status === 'not_determined' || !nv.amount) return;
+                const edible = f.edible_portion_factor ?? 1;
+                const g = ((parseFloat(val) || 0) * 1000) / (nv.amount * edible);
+                onGramsChange(f.id, Math.round(g * 10) / 10);
+              };
+              const cellEx = (macroId: string, v: number | null, label: string) => (
+                <td className="cell-num">
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.5}
+                    className="ex-input"
+                    value={v === null ? '' : v}
+                    placeholder="·"
+                    disabled={v === null}
+                    onChange={(e) => setEx(macroId, e.target.value)}
+                    aria-label={`Intercambios de ${label} de ${f.name_es}`}
+                  />
+                </td>
+              );
               return (
                 <>
-                  <td className="cell-num text-brand-dark">{ex(m.hc)}</td>
-                  <td className="cell-num text-brand-dark">{ex(m.protein)}</td>
-                  <td className="cell-num text-brand-dark">{ex(m.fat)}</td>
+                  {cellEx('carbs_g', m.hc, 'hidratos')}
+                  {cellEx('protein_g', m.protein, 'proteína')}
+                  {cellEx('fat_g', m.fat, 'grasa')}
                 </>
               );
             })()}

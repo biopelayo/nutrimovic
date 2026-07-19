@@ -110,6 +110,11 @@
     @apply w-[80px] rounded-none border border-line bg-white px-2 py-1.5 text-right text-[16px] font-semibold tabular-nums text-ink
       outline-none focus:border-brand focus:ring-1 focus:ring-brand;
   }
+  /* Intercambio editable (calcula el gramaje al vuelo) */
+  .ex-input {
+    @apply w-[58px] rounded-none border border-line bg-white px-1.5 py-1 text-right text-[15px] font-medium tabular-nums text-brand-dark
+      outline-none focus:border-brand focus:ring-1 focus:ring-brand disabled:border-transparent disabled:bg-transparent disabled:text-ink-muted;
+  }
   /* Pestañas de hoja al estilo Excel (parte inferior) */
   .sheet-tab {
     @apply border-r border-line px-4 py-1.5 text-[13px] text-ink-soft transition;
