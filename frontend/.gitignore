@@ -1,0 +1,8 @@
+node_modules
+dist
+dist-ssr
+*.local
+.vite
+.DS_Store
+# iconos generados por scripts/generate-icons.mjs (se regeneran con npm run build)
+public/icons/

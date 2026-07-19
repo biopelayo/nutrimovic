@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Datos generados
+data/*.sqlite
+data/raw/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# Entorno
+.env
+*.local
+data/translate/
+
+.github/workflows/
